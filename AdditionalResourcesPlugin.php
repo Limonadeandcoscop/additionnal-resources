@@ -29,6 +29,7 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array Hooks for the plugin.
      */
     protected $_hooks = array(
+        'install',
         'define_acl',
         'admin_items_show_sidebar',
     );
@@ -40,6 +41,36 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_filters = array(
         'admin_navigation_main',
     );
+
+
+    /**
+     * Install the plugin (create tables on database)
+     */
+    public function hookInstall()
+    {
+        $sql  = "
+        CREATE TABLE IF NOT EXISTS `{$this->_db->AdditionalResources}` (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `item_id` int(10) unsigned NOT NULL,
+          `user_id` int(10) unsigned NOT NULL,
+          `description` int(10) unsigned NULL,
+          `created` datetime default NULL,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `id` (`id`)
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $this->_db->query($sql);
+    }
+
+
+    /**
+     * Uninstall the plugin (drop tables from database)
+     */
+    public function hookUninstall()
+    {
+        $db = get_db();
+        $sql = "DROP TABLE IF EXISTS `$db->AdditionalResources` ";
+        $db->query($sql);
+    }
 
 
     /**
