@@ -16,4 +16,5 @@
 </ul>
 */
 ?>
+<br /><a href="<?php echo url('additional-resources/index/add/item_id/'.$item->id) ?>"><?php echo __('Add additional resource'); ?></a><br /><br />
 </div>

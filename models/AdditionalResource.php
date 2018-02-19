@@ -12,10 +12,10 @@
  *
  * @package Omeka\Plugins\CollectionTree
  */
-class AdditionalResources extends Omeka_Record_AbstractRecord
+class AdditionalResource extends Omeka_Record_AbstractRecord
 {
     public $item_id;
-    public $original_item_id;
-    public $language;
-    public $original;
+    public $user_id;
+    public $description;
+    public $created;
 }

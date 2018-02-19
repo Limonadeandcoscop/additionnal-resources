@@ -30,7 +30,7 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
      */
     protected $_hooks = array(
         'install',
-        'define_acl',
+        'uninstall',
         'admin_items_show_sidebar',
     );
 
@@ -39,7 +39,7 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array Filters for the plugin.
      */
     protected $_filters = array(
-        'admin_navigation_main',
+        
     );
 
 
@@ -53,8 +53,8 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
           `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `item_id` int(10) unsigned NOT NULL,
           `user_id` int(10) unsigned NOT NULL,
-          `description` int(10) unsigned NULL,
-          `created` datetime default NULL,
+          `description` mediumtext COLLATE utf8_unicode_ci,
+          `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
           UNIQUE KEY `id` (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
@@ -72,41 +72,7 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
         $db->query($sql);
     }
 
-
-    /**
-     * Add the Additional Resources link to the admin main navigation.
-     * 
-     * @param array Navigation array.
-     * @return array Filtered navigation array.
-     */
-    public function filterAdminNavigationMain($nav)
-    {
-        $nav[] = array(
-            'label' => __('Additional Resources'),
-            'uri' => url('additional-resources'),
-            'resource' => 'AdditionalResources_Index',
-            'privilege' => 'browse'
-        );
-        return $nav;
-    }
-
-
-    /**
-     * Define the ACL.
-     * 
-     * @param Omeka_Acl
-     */
-    public function hookDefineAcl($args)
-    {
-        $acl = $args['acl'];
-        
-        $additionalResourcesResource = new Zend_Acl_Resource('AdditionalResources_Index');
-        $acl->add($additionalResourcesResource);
-        
-        $acl->allow(array('super', 'admin'), array('AdditionalResources_Index'));
-        $acl->allow(null, 'AdditionalResources_Index', 'show');
-    }    
-
+    
 
     /**
     * Appended to admin item show pages.
