@@ -30,6 +30,7 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
      */
     protected $_hooks = array(
         'define_acl',
+        'admin_items_show_sidebar',
     );
 
 
@@ -58,6 +59,7 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
         return $nav;
     }
 
+
     /**
      * Define the ACL.
      * 
@@ -74,6 +76,19 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
         $acl->allow(null, 'AdditionalResources_Index', 'show');
     }    
 
-  
+
+    /**
+    * Appended to admin item show pages.
+    *
+    * @param array $args
+    */
+    public function hookAdminItemsShowSidebar($args)
+    {
+        $item = $args['item'];
+        echo get_view()->partial('index/_sidebar.php', array('item' => $item));
+    }
+    
+    
+
 
 }
