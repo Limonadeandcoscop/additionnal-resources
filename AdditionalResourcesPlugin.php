@@ -29,12 +29,51 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array Hooks for the plugin.
      */
     protected $_hooks = array(
+        'define_acl',
     );
 
 
     /**
      * @var array Filters for the plugin.
      */
-    protected $_filters = array();
+    protected $_filters = array(
+        'admin_navigation_main',
+    );
+
+
+    /**
+     * Add the Additional Resources link to the admin main navigation.
+     * 
+     * @param array Navigation array.
+     * @return array Filtered navigation array.
+     */
+    public function filterAdminNavigationMain($nav)
+    {
+        $nav[] = array(
+            'label' => __('Additional Resources'),
+            'uri' => url('additional-resources'),
+            'resource' => 'AdditionalResources_Index',
+            'privilege' => 'browse'
+        );
+        return $nav;
+    }
+
+    /**
+     * Define the ACL.
+     * 
+     * @param Omeka_Acl
+     */
+    public function hookDefineAcl($args)
+    {
+        $acl = $args['acl'];
+        
+        $additionalResourcesResource = new Zend_Acl_Resource('AdditionalResources_Index');
+        $acl->add($additionalResourcesResource);
+        
+        $acl->allow(array('super', 'admin'), array('AdditionalResources_Index'));
+        $acl->allow(null, 'AdditionalResources_Index', 'show');
+    }    
+
+  
 
 }
