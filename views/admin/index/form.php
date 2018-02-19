@@ -9,7 +9,7 @@
 
 	<div>
 		<b><br /><?php echo __('Files'); ?><br /><br /></b>
-		<div class="file" ><input type="file" name="files[0]" /></div>
+		<div class="file" ><input type="file" name="files[0]" multiple=""/></div>
 		<br /><a id="add-file" href="#"><?php echo __('Add another file'); ?></a>
 	</div>
 
@@ -21,9 +21,12 @@
 <script>
 jQuery(document).ready(function($) {
 	$('#add-file').click(function() {
-		var file = $('div.file').last();
-		var cloned = file.clone(false);
-		cloned.find('input').val('');
+		var files 	= $('div.file');
+		var file 	= files.last();
+		var cloned 	= file.clone(false);
+		var input 	= cloned.find('input');
+		input.val('');
+		input.attr('name', "files["+files.length+"]");
 		cloned.insertAfter(file);   
 	});
 });

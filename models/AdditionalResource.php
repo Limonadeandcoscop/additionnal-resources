@@ -10,7 +10,7 @@
 /**
  * A TranslateItems row.
  *
- * @package Omeka\Plugins\CollectionTree
+ * @package Omeka\Plugins\AdditionalResource
  */
 class AdditionalResource extends Omeka_Record_AbstractRecord
 {
@@ -18,4 +18,31 @@ class AdditionalResource extends Omeka_Record_AbstractRecord
     public $user_id;
     public $description;
     public $created;
+
+
+    /**
+     * Get the next filename for this resource
+     *
+     * @param Array File the from file object
+     * @return Integer The next name
+     */
+    public function getNextFileName($file) {
+
+        $files = get_db()->getTable('AdditionalResourceFile')->findBy(array('resource_id' => $this->id));
+
+        if (!$files) {
+            $id = $this->id . '_1';
+        } else {
+            $lastFile = $files[count($files)-1];
+            $name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $lastFile->name);
+            $lastId = trim(explode('_', $name)[1]);
+            $id = $this->id .'_' . ($lastId + 1);
+        }
+
+        $path_parts = pathinfo($file['name']);
+        $extension = $path_parts['extension'];
+
+        return $id.'.'.$extension; 
+    }    
+
 }

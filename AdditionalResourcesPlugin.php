@@ -9,7 +9,8 @@
  * @package AdditionalResources
  */
 
-// define('TRANSLATE_ITEMS_DIR', dirname(__FILE__));
+define('ADDITIONAL_RESOURCES_PLUGIN_PATH', dirname(__FILE__));
+define('ADDITIONAL_RESOURCES_UPLOADS_PATH', ADDITIONAL_RESOURCES_PLUGIN_PATH . '/uploads');
 // define('JAVASCRIPT_ADMIN_DIR', WEB_PLUGIN.'/TranslateItems/views/admin/javascripts/');
 
 // require_once TRANSLATE_ITEMS_DIR . '/helpers/TranslateItems.php';
@@ -59,6 +60,19 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
           UNIQUE KEY `id` (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
         $this->_db->query($sql);
+
+        $sql  = "
+        CREATE TABLE IF NOT EXISTS `{$this->_db->AdditionalResourceFiles}` (
+          `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `resource_id` int(10) unsigned NOT NULL,
+          `size` int(30) unsigned NOT NULL,
+          `original_filename` mediumtext COLLATE utf8_unicode_ci,
+          `name`  mediumtext COLLATE utf8_unicode_ci,
+          `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `id` (`id`)
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $this->_db->query($sql);        
     }
 
 
@@ -68,8 +82,8 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookUninstall()
     {
         $db = get_db();
-        $sql = "DROP TABLE IF EXISTS `$db->AdditionalResources` ";
-        $db->query($sql);
+        $db->query("DROP TABLE IF EXISTS `$db->AdditionalResources`");
+        $db->query("DROP TABLE IF EXISTS `$db->AdditionalResourceFiles`");
     }
 
     

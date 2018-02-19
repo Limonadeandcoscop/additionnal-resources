@@ -41,10 +41,30 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 	    	$resource->item_id = $this->getParam('item_id');
 	    	$resource->description = $_POST['description'];
 	    	$resource->save();	    	
+
+	    	// Re-arrange multiple files uploads
+			foreach ($_FILES['files'] as $key => $all) {
+		        foreach( $all as $i => $val ){
+		            $files[$i][$key] = $val;    
+		        }    
+		    }
+
+		    // Add resource files
+		    foreach ($files as $file) {
+		    	$name = $resource->getNextFileName($file);
+		    	$cmd = "mv ".$file['tmp_name']." ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
+		    	shell_exec($cmd);
+		    	$cmd = "chmod 755 ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
+		    	shell_exec($cmd);
+		    	$resourceFile = new AdditionalResourceFile;
+		    	$resourceFile->resource_id = $resource->id;		    	
+		    	$resourceFile->size = $file['size'];
+		    	$resourceFile->original_filename = $file['name'];
+		    	$resourceFile->name = $name;
+		    	$resourceFile->save();	    	
+		    }
 	    }
-
-
-    }    
+   }    
 
 
 }
