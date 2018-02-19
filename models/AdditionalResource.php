@@ -45,4 +45,43 @@ class AdditionalResource extends Omeka_Record_AbstractRecord
         return $id.'.'.$extension; 
     }    
 
+
+
+    /**
+     * Get the resources of an item
+     *
+     * @param Item $item The item object
+     * @return Array of AdditionalResource entries
+     */
+    public static function getItemResources($item) {
+
+        $resources = get_db()->getTable('AdditionalResource')->findBy(array('item_id' => $item->id));
+        return $resources;
+    }    
+
+
+    /**
+     * Get the files of this ressource
+     */
+    public function getFiles() {
+
+        $files = get_db()->getTable('AdditionalResourceFile')->findBy(array('resource_id' => $this->id));
+        return $files;
+    }    
+
+
+    /**
+     * Delete files attached to resource before delete the resource
+     */
+    public function beforeDelete()
+    {
+        $files = $this->getFiles();
+        
+        if (count($files)) {
+            foreach ($files as $file) {
+                $file->delete();
+            }
+        }
+    }
+
 }

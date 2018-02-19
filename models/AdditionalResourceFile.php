@@ -19,4 +19,18 @@ class AdditionalResourceFile extends Omeka_Record_AbstractRecord
     public $original_filename;
     public $name;
     public $created;
+
+
+    public function getUrl()
+    {
+    	return ADDITIONAL_RESOURCES_UPLOADS_URL . '/' . $this->name;
+    }
+
+    public function beforeDelete()
+    {
+    	$file = ADDITIONAL_RESOURCES_UPLOADS_PATH . '/'. $this->name;
+    	if (is_file($file)) {
+    		unlink($file);
+    	}
+    }
 }

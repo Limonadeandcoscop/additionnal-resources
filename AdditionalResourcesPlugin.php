@@ -9,11 +9,9 @@
  * @package AdditionalResources
  */
 
-define('ADDITIONAL_RESOURCES_PLUGIN_PATH', dirname(__FILE__));
-define('ADDITIONAL_RESOURCES_UPLOADS_PATH', ADDITIONAL_RESOURCES_PLUGIN_PATH . '/uploads');
-// define('JAVASCRIPT_ADMIN_DIR', WEB_PLUGIN.'/TranslateItems/views/admin/javascripts/');
+define('ADDITIONAL_RESOURCES_UPLOADS_PATH', FILES_DIR . '/uploads');
+define('ADDITIONAL_RESOURCES_UPLOADS_URL', WEB_FILES . '/uploads');
 
-// require_once TRANSLATE_ITEMS_DIR . '/helpers/TranslateItems.php';
 
 /**
  * The AdditionalResources plugin.
@@ -96,7 +94,21 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookAdminItemsShowSidebar($args)
     {
         $item = $args['item'];
-        echo get_view()->partial('index/_sidebar.php', array('item' => $item));
+
+        $resources = AdditionalResource::getItemResources($item);
+
+        $html = get_view()->partial('index/_sidebar.php', array('item' => $item, 'resources' => $resources));
+
+        $html = str_replace("\t", '', $html); // remove tabs
+        $html = str_replace("\n", '', $html); // remove new lines
+        $html = str_replace("\r", '', $html); // remove carriage returns
+        $html = addslashes($html);
+
+        echo '<script>';
+        echo '  jQuery(document).ready(function($) {';
+        echo '    $("<p>'.$html.'</p>").insertAfter($(".public-featured.panel"))';
+        echo '  });';
+        echo '</script>';
     }
     
     
