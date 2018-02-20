@@ -31,6 +31,7 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
         'install',
         'uninstall',
         'admin_items_show_sidebar',
+        'public_items_show',
     );
 
 
@@ -112,6 +113,15 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
     }
     
     
+    /**
+     * Display additional resources on frontoffice
+     */
+    public function hookPublicItemsShow($args)
+    {
+        $item = $args['item'];
+        $resources =  AdditionalResource::getItemResources($item);
+        echo get_view()->partial('additional-resources/show.php', array('resources' => $resources));
+    }
 
 
 }
