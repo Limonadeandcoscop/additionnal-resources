@@ -31,14 +31,15 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
     	if (!$this->getParam('item_id')) throw new Exception('Item ID id required');
 
     	if ($this->_request->isPost()) {
-	    	if (!strlen(trim($_POST['description']))) {
-				$this->_helper->_flashMessenger(__('The "Description" field is required.'), 'error');
+	    	if (!strlen(trim($_POST['title']))) {
+				$this->_helper->_flashMessenger(__('The "title" field is required.'), 'error');
 				return;	
 	    	}
 
 	    	$resource = new AdditionalResource;
 	    	$resource->user_id = current_user()->id;
 	    	$resource->item_id = $this->getParam('item_id');
+	    	$resource->title = $_POST['title'];
 	    	$resource->description = $_POST['description'];
 	    	$resource->save();	    	
 
@@ -79,10 +80,11 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 
    		if ($this->_request->isPost()) {
 
-	    	if (!strlen(trim($_POST['description']))) {
-				$this->_helper->_flashMessenger(__('The "Description" field is required.'), 'error');
+	    	if (!strlen(trim($_POST['title']))) {
+				$this->_helper->_flashMessenger(__('The "Title" field is required.'), 'error');
 				return;	
 	    	} else {
+	    		$resource->title = $_POST['title'];
 	    		$resource->description = $_POST['description'];
 	    		$resource->save();
 	    	}

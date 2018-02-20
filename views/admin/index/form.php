@@ -3,8 +3,13 @@
 <form action="#" method="post" enctype="multipart/form-data">
 
 	<div>
+		<b><?php echo __('Title'); ?></b>
+		<input type="text" style="width:100%;" name="title" value="<?php echo @$resource->title; ?>" />
+	</div>
+
+	<div>
 		<b><?php echo __('Description'); ?></b>
-		<textarea name="description" rows="5" style="margin-top:10px"><?php echo @$resource->description; ?></textarea>
+		<textarea name="description" rows="5"><?php echo @$resource->description; ?></textarea>
 	</div>
 
 	<div>

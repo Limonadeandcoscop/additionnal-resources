@@ -16,6 +16,7 @@ class AdditionalResource extends Omeka_Record_AbstractRecord
 {
     public $item_id;
     public $user_id;
+    public $title;
     public $description;
     public $created;
 

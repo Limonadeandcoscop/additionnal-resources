@@ -53,6 +53,7 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
           `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `item_id` int(10) unsigned NOT NULL,
           `user_id` int(10) unsigned NOT NULL,
+          `title` mediumtext COLLATE utf8_unicode_ci,
           `description` mediumtext COLLATE utf8_unicode_ci,
           `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
