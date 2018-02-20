@@ -52,7 +52,15 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 
 		    // Add resource files
 		    foreach ($files as $file) {
+
+		    	if (!$file['name']) continue;
+
 		    	$name = $resource->getNextFileName($file);
+        		$extension = strtolower(trim(pathinfo($file['name'])['extension']));
+        		$type = $file['type'];
+
+        		if ($extension != 'pdf' || $type != 'application/pdf') continue;
+
 		    	$cmd = "mv ".$file['tmp_name']." ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
 		    	shell_exec($cmd);
 		    	$cmd = "chmod 755 ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;

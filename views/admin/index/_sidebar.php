@@ -3,7 +3,7 @@
 <ul>
 <?php foreach($resources as $resource): ?>
     <li>
-    	<a href="<?php echo url('additional-resources/index/edit/resource_id/'.$resource->id) ?>"><?php echo cut_string($resource->description, 120) ?></a>
+    	<a href="<?php echo url('additional-resources/index/edit/resource_id/'.$resource->id) ?>"><?php echo cut_string($resource->title, 120) ?></a>
     </li>
 <?php endforeach; ?>
 </ul>

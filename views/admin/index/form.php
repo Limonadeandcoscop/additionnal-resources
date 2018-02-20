@@ -13,7 +13,7 @@
 	</div>
 
 	<div>
-		<b><br /><?php echo __('Files'); ?><br /><br /></b>
+		<b><br /><?php echo __('Files'); ?>&nbsp;(<?php echo __('only PDF files are allowed') ?>)<br /><br /></b>
 		
 			<?php if(isset($resource)): ?>
 				<?php foreach ($resource->getFiles() as $file): ?>
