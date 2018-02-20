@@ -34,7 +34,9 @@
 
 	<br /><br /><input type="submit" value="<?php echo __('Save resource') ?>" />
 
-	<a href="<?php echo html_escape(url('additional-resources/index/delete-confirm/id/'.$resource->id)) ?>" class="delete-confirm red button">Delete resource</a>
+	<?php if (isset($resource)): ?>
+		<a href="<?php echo html_escape(url('additional-resources/index/delete-confirm/id/'.$resource->id)) ?>" class="delete-confirm red button">Delete resource</a>
+	<?php endif; ?>
 	
 </form>
 
