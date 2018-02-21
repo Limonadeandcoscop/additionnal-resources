@@ -14,6 +14,8 @@
  */
 class AdditionalResources_IndexController extends Omeka_Controller_AbstractActionController
 {    
+	private $_allowedExtensions = array('pdf', 'jpg', 'jpeg', 'zip', 'rar', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'csv');
+
     public function init()
     {
         $this->_helper->db->setDefaultModelName('AdditionalResource');
@@ -57,9 +59,8 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 
 		    	$name = $resource->getNextFileName($file);
         		$extension = strtolower(trim(pathinfo($file['name'])['extension']));
-        		$type = $file['type'];
 
-        		if ($extension != 'pdf' || $type != 'application/pdf') continue;
+        		if (!in_array($extension, $this->_allowedExtensions)) continue;
 
 		    	$cmd = "mv ".$file['tmp_name']." ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
 		    	shell_exec($cmd);
