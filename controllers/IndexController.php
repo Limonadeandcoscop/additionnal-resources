@@ -120,6 +120,9 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 
 		    	if (!strlen(trim($file['name']))) continue;
 		    	$name = $resource->getNextFileName($file);
+        		$extension = strtolower(trim(pathinfo($file['name'])['extension']));
+
+        		if (!in_array($extension, $this->_allowedExtensions)) continue;		    	
 		    	$cmd = "mv ".$file['tmp_name']." ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
 		    	shell_exec($cmd);
 		    	$cmd = "chmod 755 ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
