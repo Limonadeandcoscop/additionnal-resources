@@ -125,4 +125,17 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
 
+    /**
+     * Get the number of ressources of an item
+     *
+     * @param Item the Item object
+     * @return Integer|false 
+     */
+    public static function getResourcesOfItem($item)
+    {
+        $resources  =AdditionalResource::getItemResources($item);
+        if (count($resources)) return count($resources);
+        return false;
+    }
+
 }
