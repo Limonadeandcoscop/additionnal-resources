@@ -172,5 +172,73 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
         $this->_helper->redirector->gotoUrl('/items/show/'.$record->item_id);
     }    
 
+
+	public function addPdfAction()
+    {
+    	if ($this->_request->isPost()) {
+			$file = $_FILES['pdf-file'];
+    		if (!strlen(trim($file['name']))) {
+    			$this->_helper->_flashMessenger(__('The PDF file is required.'), 'error');
+				return;		
+    		} else {
+    			$extension = strtolower(trim(pathinfo($file['name'])['extension']));
+    			if ($extension != 'pdf') {
+    				$this->_helper->_flashMessenger(__('Only PDF file are allowed.'), 'error');
+					return;		
+    			} else {
+    				if ($item_id = $this->getParam('item_id')) {
+    					$name = 'pdf_'.$item_id.'.pdf';
+    					$cmd = "mv ".$file['tmp_name']." ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
+				    	shell_exec($cmd);
+				    	$cmd = "chmod 755 ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
+				    	shell_exec($cmd);
+				    	$this->_helper->redirector->gotoUrl('/items/show/'.$item_id);
+    				}
+    			}
+    		}
+    	} else {
+    		if ($item_id = $this->getParam('item_id')) {
+    			$name = 'pdf_'.$item_id.'.pdf';	
+    			$path = ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
+    			echo file_exists($path);
+    		}
+    	}
+    }
     
+
+    public function editPdfAction()
+    {
+    	$item = get_record_by_id("Item", $this->getParam('item_id'));
+    	$this->view->item = $item;
+
+    	if ($this->_request->isPost()) {
+			$file = $_FILES['pdf-file'];
+    		if (!strlen(trim($file['name']))) {
+    			$this->_helper->_flashMessenger(__('The PDF file is required.'), 'error');
+				return;		
+    		} else {
+    			$extension = strtolower(trim(pathinfo($file['name'])['extension']));
+    			if ($extension != 'pdf') {
+    				$this->_helper->_flashMessenger(__('Only PDF file are allowed.'), 'error');
+					return;		
+    			} else {
+    				if ($item_id = $this->getParam('item_id')) {
+    					$name = 'pdf_'.$item_id.'.pdf';
+    					unlink(ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name);
+    					$cmd = "mv ".$file['tmp_name']." ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
+				    	shell_exec($cmd);
+				    	$cmd = "chmod 755 ".ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
+				    	shell_exec($cmd);
+				    	$this->_helper->redirector->gotoUrl('/items/show/'.$item_id);
+    				}
+    			}
+    		}
+    	} else {
+    		if ($item_id = $this->getParam('item_id')) {
+    			$name = 'pdf_'.$item_id.'.pdf';	
+    			$path = ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
+    			echo file_exists($path);
+    		}
+    	}
+    }
 }

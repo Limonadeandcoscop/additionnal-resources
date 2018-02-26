@@ -133,9 +133,24 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public static function getResourcesOfItem($item)
     {
-        $resources  =AdditionalResource::getItemResources($item);
+        $resources = AdditionalResource::getItemResources($item);
         if (count($resources)) return count($resources);
         return false;
     }
+
+
+    /**
+     * Get the PDF file of this item (The PDF file attached to the top parent item)
+     *
+     * @param Item the Item object
+     * @return String|false Returns the URL of the PDF file, otherwise false
+     */
+    public static function getPdfFile($item)
+    {
+          $topParentItem = OaipmhHarvesterPlugin::getTopParentItem($item);
+          if (!AdditionalResource::itemHasPdfFile($topParentItem)) return false;
+          return ADDITIONAL_RESOURCES_UPLOADS_URL.'/pdf_'.$topParentItem->id.'.pdf';
+    }
+
 
 }

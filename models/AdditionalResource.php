@@ -62,6 +62,20 @@ class AdditionalResource extends Omeka_Record_AbstractRecord
 
 
     /**
+     * Check if a top level item has PDF file attached
+     *
+     * @param Item the Item object
+     * @return Boolean
+     */
+    public static function itemHasPdfFile($item) {
+
+        $name = 'pdf_'.$item->id.'.pdf'; 
+        $path = ADDITIONAL_RESOURCES_UPLOADS_PATH.'/'.$name;
+        return file_exists($path);
+    }    
+
+
+    /**
      * Get the files of this ressource
      */
     public function getFiles() {
