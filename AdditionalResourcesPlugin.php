@@ -9,6 +9,7 @@
  * @package AdditionalResources
  */
 
+define('ADDITIONAL_RESOURCES_PLUGIN_DIRECTORY', dirname(__FILE__));
 define('ADDITIONAL_RESOURCES_UPLOADS_PATH', FILES_DIR . '/uploads');
 define('ADDITIONAL_RESOURCES_UPLOADS_URL', WEB_FILES . '/uploads');
 
