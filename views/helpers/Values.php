@@ -238,6 +238,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	}
 
 
+
 	/**
 	 * Callback function for 'subject_access_points' key
 	 *
