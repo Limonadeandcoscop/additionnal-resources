@@ -1,7 +1,7 @@
 <?php
 /**
  * Omeka
- * 
+ *
  * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
@@ -48,20 +48,20 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
     	}
 
     	// Return values as array
-    	if (method_exists($this, 'get_'.$key)) {  
+    	if (method_exists($this, 'get_'.$key)) {
 
 			// There exist a callback function, raw metadatas needs specific process
 	    	$values = call_user_func(array($this, 'get_'.$key), $key);
 	    	if (!is_array($values)) $values = array($values);
 
-	    } else { 
+	    } else {
 
-			// Returns raw metadatas 
+			// Returns raw metadatas
 			$dcKey = str_replace('_', ' ', $key);
 	    	$values = metadata($this->_item, array($set, ucwords($dcKey)), array('all' => true));
 	    }
 
-		return array(__($label) => $values);	    
+		return array(__($label) => $values);
     }
 
 
@@ -87,8 +87,9 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	private function get_identifier($key)
 	{
 		$identifiers = metadata($this->_item, array('Dublin Core', 'Identifier'), array('all' => true));
-		$identifiers = @preg_grep("/^(?!http.*$).*/", array_map("trim", $identifiers)); 
-        $identifiers = @preg_grep("/^(?!Alternative :.*$).*/", array_map("trim", $identifiers)); 
+		$identifiers = @preg_grep("/^(?!http.*$).*/", array_map("trim", $identifiers));
+        $identifiers = @preg_grep("/^(?!Alternative :.*$).*/", array_map("trim", $identifiers));
+        $identifiers = @preg_grep("/^(?!<a.*$).*/", array_map("trim", $identifiers));
         $identifiers = array_values($identifiers);
         return $identifiers;
 	}
@@ -174,7 +175,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 			}
 		}
 		return $scopeAndContent;
-	}	
+	}
 
 
 	/**
@@ -194,7 +195,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 			}
 		}
 		return $arrangement;
-	}	
+	}
 
 
 	/**
@@ -211,10 +212,10 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 		foreach ($relations as $relation) {
 			if (preg_match_all('/^Originals : /', $relation)) {
 				$originals[] = str_replace('Originals : ', '', $relation);
-			} 
+			}
 		}
 		return $originals;
-	}	
+	}
 
 
 	/**
@@ -231,10 +232,10 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 		foreach ($relations as $relation) {
 			if (!preg_match_all('/^Originals : /', $relation)) {
 				$copies[] = str_replace('Originals : ', '', $relation);
-			} 
+			}
 		}
 		return $copies;
-	}	
+	}
 
 
 	/**
@@ -251,11 +252,11 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 		foreach ($subjects as $subject) {
 			if (preg_match_all('/^Subject : /', $subject)) {
 				$subjects[] = trim(str_replace('Subject : ', '', $subject));
-			} 
+			}
 		}
 		return $subjects;
-	}	
-	
+	}
+
 
 	/**
 	 * Callback function for 'name_access_points' key
@@ -271,11 +272,11 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 		foreach ($subjects as $subject) {
 			if (preg_match_all('/^Name : /', $subject)) {
 				$names[] = trim(str_replace('Name : ', '', $subject));
-			} 
+			}
 		}
 		return $names;
 	}
-	
+
 }
 
 
