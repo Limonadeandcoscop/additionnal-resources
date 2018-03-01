@@ -230,8 +230,8 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 
 		$copies = array();
 		foreach ($relations as $relation) {
-			if (!preg_match_all('/^Originals : /', $relation)) {
-				$copies[] = str_replace('Originals : ', '', $relation);
+			if (preg_match_all('/^Copies : /', $relation)) {
+				$copies[] = str_replace('Copies : ', '', $relation);
 			}
 		}
 		return $copies;
