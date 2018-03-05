@@ -241,4 +241,35 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
     		}
     	}
     }
+
+
+    /**
+     * Suggest titles for search inputs
+     *
+     * @param Integer (Ajax) $text The text input by user
+     * @return JSON
+     */
+    public function autocompleteAction()
+    {
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // if (!$this->_request->isXmlHttpRequest()) return;
+
+        $this->getResponse()->setHeader('Content-Type', 'application/json');
+
+        // Get DB object
+        $db = $this->_helper->db;
+
+        // Retrive param
+        if (!($text = $this->getParam('text'))) return;
+
+        $tableElementTexts = $db->getTable('ElementText');
+
+        $sql = "SELECT record_id, text from ".$tableElementTexts->getTableName()." WHERE text LIKE '".$text."%' AND element_id = 50 AND record_type ='Item' AND record_id IN (SELECT id FROM ".$db->getTable('OaipmhHarvester_Hierarchy')->getTableName().")";
+
+        $res = $tableElementTexts->fetchAll($sql);
+
+        echo json_encode($res);
+    }    
 }
