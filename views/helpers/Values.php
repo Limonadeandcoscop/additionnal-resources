@@ -96,6 +96,20 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 
 
 	/**
+	 * Callback function for 'format' key
+	 *
+	 * @param $key The key of the field
+	 * @return Array An array of values
+	 */
+	private function get_format($key)
+	{
+		$formats = metadata($this->_item, array('Dublin Core', 'Format'), array('all' => true));
+		$formats = array_filter($formats, function($string) {return strpos($string, '/') === false;});
+		return $formats;
+	}
+
+
+	/**
 	 * Callback function for 'alternative_identifier' key
 	 *
 	 * @param $key The key of the field
