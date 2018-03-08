@@ -327,12 +327,12 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
         // Disable view rendering
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $values = $this->_getValues($item);
+        $values['values'] = $this->_getValues($item);
 
         if ($this->getParam('with_headers')) {
-            $values['headers']['identifier'] = array_shift($this->view->values($item, 'identifier'));
-            $values['headers']['type'] = array_shift($this->view->values($item, 'type'));
-            $values['headers']['title'] = array_shift($this->view->values($item, 'title'));
+            $values['headers']['identifier']    = @array_shift($this->view->values($item, 'identifier'));
+            $values['headers']['type']          = @array_shift($this->view->values($item, 'type'));
+            $values['headers']['title']         = @array_shift($this->view->values($item, 'title'));
         }
 
         if ($this->getParam('debug')) {
