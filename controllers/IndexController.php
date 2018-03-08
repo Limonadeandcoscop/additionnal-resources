@@ -280,6 +280,7 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
      * @param Integer (url|ajax) $item-id The ID of the original item (in english)
      * @param String (url|ajax) $language The language code requested
      * @param Boolean (url|ajax) $related Get the related item ?
+     * @param Boolean (url|ajax) $with_headers Add the title, the reference and the title in the results
      * @see _getValues()
      * @return JSON|Array according to result param
      */
@@ -327,6 +328,12 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
         $this->_helper->viewRenderer->setNoRender(true);
 
         $values = $this->_getValues($item);
+
+        if ($this->getParam('with_headers')) {
+            $values['headers']['identifier'] = array_shift($this->view->values($item, 'identifier'));
+            $values['headers']['type'] = array_shift($this->view->values($item, 'type'));
+            $values['headers']['title'] = array_shift($this->view->values($item, 'title'));
+        }
 
         if ($this->getParam('debug')) {
             echo '<pre>';

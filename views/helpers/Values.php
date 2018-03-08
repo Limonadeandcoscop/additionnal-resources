@@ -97,6 +97,20 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 
 
 	/**
+	 * Callback function for 'type' key
+	 *
+	 * @param $key The key of the field
+	 * @return Array An array of values
+	 */
+	private function get_type($key)
+	{
+		$types = metadata($this->_item, array('Dublin Core', 'Type'), array('all' => true));
+		$types = @preg_grep("/^(?!image.*$).*/", array_map("trim", $types));
+        return $types;
+	}
+
+
+	/**
 	 * Callback function for 'format' key
 	 *
 	 * @param $key The key of the field
