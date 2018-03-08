@@ -272,4 +272,99 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 
         echo json_encode($res);
     }    
+
+
+    /**
+     * Return formatted values of the application
+     *
+     * @param Integer (url|ajax) $item-id The ID of the original item (in english)
+     * @param String (url|ajax) $language The language code requested
+     * @param Boolean (url|ajax) $related Get the related item ?
+     * @see _getValues()
+     * @return JSON|Array according to result param
+     */
+    public function valuesAction() 
+    {
+        // Get item-id
+        if (!($id = $this->getParam('item-id'))) {
+            throw new Exception("Item ID is required");
+        }
+
+        // Get Item object
+        if (!($item = get_record_by_id("Item", $id))) {
+            throw new Exception("Invalid item");
+        }            
+
+        $related = $this->getParam('related');
+
+        if ($related) {
+            $item = OaipmhHarvesterPlugin::getTopParentItem($item);
+        }
+
+        // Get and check language code
+        $language = $this->getParam('language');
+        if ($language == 'en') unset($language);
+        if (isset($language)) {
+            if (!isValidLanguageCode($language)) {
+                throw new Exception("Invalid language code : " . $language);
+            } else {
+                $translations = TranslateItemsPlugin::getOtherLanguagesOfItem($item);
+                foreach($translations as $translation) {
+                    if ($translation->language == $language) {
+                        $translatedItemId = $translation->item_id;
+                    }
+                }
+                if (isset($translatedItemId)) {
+                    if (!($item = get_record_by_id("Item", $translatedItemId))) {
+                        throw new Exception("Invalid translated item");
+                    }  
+                }
+                // Else, there's no translation in this language, returns the original item
+            }
+        }
+
+        // Disable view rendering
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $values = $this->_getValues($item);
+
+        if ($this->getParam('debug')) {
+            echo '<pre>';
+            print_r($values);
+            echo '</pre>';
+        } else {
+            $this->getResponse()->setHeader('Content-Type', 'application/json');
+            echo json_encode($values);
+        }
+    }
+
+
+    /**
+     * Return formatted values of the application
+     *
+     * @param Item $item The item object
+     * @return Array A multidimensionnal array containing values
+     */
+    private function _getValues($item)
+    {
+        $ini = parse_ini_file(ADDITIONAL_RESOURCES_PLUGIN_DIRECTORY.'/fields.ini', true);
+
+        $res = array();
+        foreach ($ini as $section => $fields) {
+            foreach ($fields as $key => $field) {
+                
+                $values = $this->view->values($item, $key);
+
+                $temp = $values;
+                $temp = array_shift($temp);
+                if (count($temp)) {
+                    $res[$section][] = $values;
+                }
+            }
+             
+        }
+        return $res;        
+    }
+
+
 }

@@ -31,6 +31,7 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_hooks = array(
         'install',
         'uninstall',
+        'define_routes',
         'admin_items_show_sidebar',
         'public_items_show',
     );
@@ -139,6 +140,23 @@ class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
         return false;
     }
 
+
+    /**
+     * Add the routes for accessing cart functionalities
+     *
+     * @param Zend_Controller_Router_Rewrite $router
+     */
+    public function hookDefineRoutes($args)
+    {
+        // Don't add these routes on the admin side to avoid conflicts.
+        if (is_admin_theme()) return;
+
+        // Include routes file
+        $router = $args['router'];
+        $router->addConfig(new Zend_Config_Ini(ADDITIONAL_RESOURCES_PLUGIN_DIRECTORY .
+        DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
+    }
+    
 
     /**
      * Get the PDF file of this item (The PDF file attached to the top parent item)

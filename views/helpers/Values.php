@@ -35,8 +35,8 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
         // Instanciante variable instance
     	$this->_item = $item;
 
-    	$ini = new Zend_Config_Ini(ADDITIONAL_RESOURCES_PLUGIN_DIRECTORY.'/fields.ini');
-    	$this->_fields = $ini->fields;
+    	// $ini = new Zend_Config_Ini();
+    	$this->_fields = parse_ini_file(ADDITIONAL_RESOURCES_PLUGIN_DIRECTORY.'/fields.ini');
 
     	$label = $this->_getLabel($key);
 
@@ -74,7 +74,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	 */
 	private function _getLabel($key) {
 
-		return $this->_fields->$key;
+		return $this->_fields[$key];
 	}
 
 
@@ -88,6 +88,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	{
 		$identifiers = metadata($this->_item, array('Dublin Core', 'Identifier'), array('all' => true));
 		$identifiers = @preg_grep("/^(?!http.*$).*/", array_map("trim", $identifiers));
+		$identifiers = @preg_grep("/^(?!ark:.*$).*/", array_map("trim", $identifiers));
         $identifiers = @preg_grep("/^(?!Alternative :.*$).*/", array_map("trim", $identifiers));
         $identifiers = @preg_grep("/^(?!<a.*$).*/", array_map("trim", $identifiers));
         $identifiers = array_values($identifiers);
@@ -132,7 +133,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	private function get_source($key)
 	{
 		$identifiers = metadata($this->_item, array('Dublin Core', 'Identifier'), array('all' => true));
-		return preg_grep("/^http:\/\//", $identifiers)[0];
+		return @preg_grep("/^http:\/\//", $identifiers)[0];
 	}
 
 
