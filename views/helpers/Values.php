@@ -15,8 +15,11 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	// Current item object
 	private $_item;
 
-	// Fields lables
+	// Fields labels
 	private $_fields;
+
+	// Disable links in results ?
+	private $_disable_links;
 
 	/**
 	 * Manage values calls
@@ -25,7 +28,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	 * @return Array An array of values
 	 *
 	 */
-    public function values($item, $key) {
+    public function values($item, $key, $disable_links = false) {
 
     	// Check $item object
     	if (!($item instanceof Omeka_Record_AbstractRecord)) {
@@ -34,6 +37,8 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 
         // Instanciante variable instance
     	$this->_item = $item;
+
+    	$this->_disable_links = $disable_links;
 
     	// $ini = new Zend_Config_Ini();
     	$this->_fields = parse_ini_file(ADDITIONAL_RESOURCES_PLUGIN_DIRECTORY.'/fields.ini');
@@ -307,6 +312,57 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 		return $names;
 	}
 
+
+	/**
+	 * Callback function for 'access_rights' key
+	 *
+	 * @param $key The key of the field
+	 * @return Array An array of values
+	 */
+	private function get_access_rights($key)
+	{
+		if (plugin_is_active('OaipmhHarvester')) {
+			$item = OaipmhHarvesterPlugin::getTopParentItem($this->_item);
+			$repository = metadata($item, array('Dublin Core', 'Publisher'));
+		}
+
+		if ($this->_disable_links) return $repository;
+
+		if (strlen(trim($repository))) {
+			$links = metadata($item, array('Dublin Core', 'Relation'), array('all' => true));
+			foreach ($links as $link) {
+				if(substr($link, 0, 7) == "http://") 
+					break;
+			}
+		}
+
+		if (isset($link)) {
+			return '<a target="_blank" class="repository-link" href="'.$link.'">'.$repository.'</a>';
+		}
+		
+		return $repository;
+	}
+
+	
+	/**
+	 * Callback function for 'creator' key
+	 *
+	 * @param $key The key of the field
+	 * @return Array An array of values
+	 */
+	private function get_creator($key)
+	{
+		$creator = metadata($this->_item, array('Dublin Core', 'Creator'));
+		$link = metadata($this->_item, array('Item Type Metadata', 'Creator Link'));
+
+		if ($this->_disable_links) return $creator;
+
+		if (isset($link)) {
+			return '<a target="_blank" class="repository-link" href="'.$link.'">'.$creator.'</a>';
+		}
+		
+		return $creator;
+	}
 }
 
 
