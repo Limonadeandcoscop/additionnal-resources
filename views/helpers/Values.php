@@ -283,13 +283,13 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	{
 		$subjects	= metadata($this->_item, array('Dublin Core', 'Subject'), array('all' => true));
 
-		$subjects = array();
+		$subject = array();
 		foreach ($subjects as $subject) {
 			if (preg_match_all('/^Subject : /', $subject)) {
-				$subjects[] = trim(str_replace('Subject : ', '', $subject));
+				$subject[] = trim(str_replace('Subject : ', '', $subject));
 			}
 		}
-		return $subjects;
+		return $subject;
 	}
 
 
@@ -352,16 +352,18 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	 */
 	private function get_creator($key)
 	{
-		$creator = metadata($this->_item, array('Dublin Core', 'Creator'));
+		$creators = metadata($this->_item, array('Dublin Core', 'Creator'));
 		$link = metadata($this->_item, array('Item Type Metadata', 'Creator Link'));
 
-		if ($this->_disable_links) return $creator;
+		$res = array();
+
+		if ($this->_disable_links) return $creators;
 
 		if (isset($link)) {
-			return '<a target="_blank" class="repository-link" href="'.$link.'">'.$creator.'</a>';
+			return '<a target="_blank" class="repository-link" href="'.$link.'">'.$creators.'</a>';
 		}
 		
-		return $creator;
+		return $res;
 	}
 }
 
