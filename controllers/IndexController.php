@@ -331,7 +331,7 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 
         if ($this->getParam('with_headers')) {
             $values['headers']['identifier']    = @array_shift($this->view->values($item, 'identifier'));
-            $values['headers']['type']          = @array_shift($this->view->values($item, 'type'));
+            $values['headers']['type']          = @array_shift($this->view->values($item, 'publisher'));
             $values['headers']['title']         = @array_shift($this->view->values($item, 'title'));
         }
 
