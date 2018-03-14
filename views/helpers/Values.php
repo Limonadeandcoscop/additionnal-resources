@@ -111,6 +111,10 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	{
 		$types = metadata($this->_item, array('Dublin Core', 'Type'), array('all' => true));
 		$types = @preg_grep("/^(?!image.*$).*/", array_map("trim", $types));
+		$types = array_values($types);
+
+		if(@!$types[0]) return array();
+
         return $types;
 	}
 
@@ -224,8 +228,8 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 
 		$arrangement = array();
 		foreach ($descriptions as $description) {
-			if (preg_match_all('/^Arrangement/', $description)) {
-				$arrangement[] = $description;
+			if (preg_match_all('/^Arrangement : /', $description)) {
+				$arrangement[] = ucfirst(str_replace('Arrangement : ', '', $description));
 			}
 		}
 		return $arrangement;
@@ -365,6 +369,31 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 		
 		return $res;
 	}
+
+
+	/**
+	 * Callback function for 'related_descriptions' key
+	 *
+	 * @param $key The key of the field
+	 * @return Array An array of values
+	 */
+	private function get_related_descriptions($key)
+	{
+		$links = metadata($this->_item, array('Dublin Core', 'Is Part Of'), array('all' => true));
+
+		$res = array();
+		foreach($links as $link) {
+			$link = explode('[[', $link);
+			$name = $link[0];
+			$url  = trim(str_replace(']]', '', $link[1]));
+			if ($this->_disable_links) {
+				$res[] = $name;
+			} else {
+				$res[] = '<a target="_blank" class="related-description-link" href="'.$url.'">'.$name.'</a>';
+			}
+		}
+		return $res;
+	}	
 }
 
 
