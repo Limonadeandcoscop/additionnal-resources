@@ -404,8 +404,15 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	 */
 	private function get_publisher($key)
 	{
-		$publisher = metadata($this->_item, array('Dublin Core', 'Publisher'));
-		$link = metadata($this->_item, array('Dublin Core', 'Relation'));
+
+		if (plugin_is_active('OaipmhHarvester')) {
+			$item = OaipmhHarvesterPlugin::getTopParentItem($this->_item);
+		} else {
+			$item = $this->_item;
+		}
+
+		$publisher = metadata($item, array('Dublin Core', 'Publisher'));
+		$link = metadata($item, array('Dublin Core', 'Relation'));
 
 		$res = array();
 
