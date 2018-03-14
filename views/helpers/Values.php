@@ -287,13 +287,13 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	{
 		$subjects	= metadata($this->_item, array('Dublin Core', 'Subject'), array('all' => true));
 
-		$subject = array();
+		$res = array();
 		foreach ($subjects as $subject) {
 			if (preg_match_all('/^Subject : /', $subject)) {
-				$subject[] = trim(str_replace('Subject : ', '', $subject));
+				$res[] = trim(str_replace('Subject : ', '', $subject));
 			}
 		}
-		return $subject;
+		return $res;
 	}
 
 
@@ -392,6 +392,29 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 				$res[] = '<a target="_blank" class="related-description-link" href="'.$url.'">'.$name.'</a>';
 			}
 		}
+		return $res;
+	}	
+
+
+	/**
+	 * Callback function for 'publisher' key
+	 *
+	 * @param $key The key of the field
+	 * @return Array An array of values
+	 */
+	private function get_publisher($key)
+	{
+		$publisher = metadata($this->_item, array('Dublin Core', 'Publisher'));
+		$link = metadata($this->_item, array('Dublin Core', 'Relation'));
+
+		$res = array();
+
+		if ($this->_disable_links) return $publisher;
+
+		if (isset($link)) {
+			return '<a target="_blank" class="repository-link" href="'.$link.'">'.$publisher.'</a>';
+		}
+		
 		return $res;
 	}	
 }
