@@ -187,10 +187,19 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	private function get_date_end($key)
 	{
 		$temporalCoverage = metadata($this->_item, array('Dublin Core', 'Temporal Coverage'), array('all' => true));
+
+
 		$datesEnd = array();
 		foreach ($temporalCoverage as $date) {
+
+			if (is_string($date)) continue;
+			
 			$d = explode(' - ', $date);
-			@$datesEnd[] = $d[1];
+			if(is_array($d) && count($d)>1) {
+				@$datesEnd[] = $d[1];
+			} else {
+				@$datesEnd[] = $d[0];
+			}
 		}
 		return $datesEnd;
 	}
