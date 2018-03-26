@@ -402,7 +402,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 				if ($this->_disable_links) {
 					$res[] = $name;
 				} else {
-					$res[] = '<a target="_blank" class="related-description-link" href="'.$url.'">'.$name.'</a>';
+					$res[] = '<a target="_blank" class="related-description-link" href="'.$url.'">'.trim($name).'</a>';
 				}
 			} else {
 				$res[] = $link[0];
