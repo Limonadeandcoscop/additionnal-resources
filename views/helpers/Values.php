@@ -188,13 +188,14 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	{
 		$temporalCoverage = metadata($this->_item, array('Dublin Core', 'Temporal Coverage'), array('all' => true));
 
-
 		$datesEnd = array();
+
 		foreach ($temporalCoverage as $date) {
 
-			if (is_string($date)) continue;
-			
 			$d = explode(' - ', $date);
+
+			if (is_string($d)) continue;
+
 			if(is_array($d) && count($d)>1) {
 				@$datesEnd[] = $d[1];
 			} else {
