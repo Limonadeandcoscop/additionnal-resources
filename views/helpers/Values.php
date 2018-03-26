@@ -333,6 +333,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	 * @param $key The key of the field
 	 * @return Array An array of values
 	 */
+	/*
 	private function get_access_rights($key)
 	{
 		if (plugin_is_active('OaipmhHarvester')) {
@@ -356,6 +357,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 		
 		return $repository;
 	}
+	*/
 
 	
 	/**
@@ -394,12 +396,16 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 		$res = array();
 		foreach($links as $link) {
 			$link = explode('[[', $link);
-			$name = $link[0];
-			$url  = trim(str_replace(']]', '', $link[1]));
-			if ($this->_disable_links) {
-				$res[] = $name;
+			if(count($link)>1) {
+				$name = $link[0];
+				$url  = trim(str_replace(']]', '', $link[1]));
+				if ($this->_disable_links) {
+					$res[] = $name;
+				} else {
+					$res[] = '<a target="_blank" class="related-description-link" href="'.$url.'">'.$name.'</a>';
+				}
 			} else {
-				$res[] = '<a target="_blank" class="related-description-link" href="'.$url.'">'.$name.'</a>';
+				$res[] = $link[0];
 			}
 		}
 		return $res;
