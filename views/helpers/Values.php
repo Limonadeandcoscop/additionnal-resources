@@ -333,7 +333,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	 * @param $key The key of the field
 	 * @return Array An array of values
 	 */
-	/*
+	
 	private function get_access_rights($key)
 	{
 		if (plugin_is_active('OaipmhHarvester')) {
@@ -341,7 +341,9 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 			$repository = metadata($item, array('Dublin Core', 'Publisher'));
 		}
 
-		if ($this->_disable_links) return $repository;
+		$prefix = _('Subject to the authorization of ');
+
+		if ($this->_disable_links) return $prefix . $repository;
 
 		if (strlen(trim($repository))) {
 			$links = metadata($item, array('Dublin Core', 'Relation'), array('all' => true));
@@ -352,13 +354,11 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 		}
 
 		if (isset($link)) {
-			return '<a target="_blank" class="repository-link" href="'.$link.'">'.$repository.'</a>';
+			return $prefix . '<a target="_blank" class="repository-link" href="'.$link.'">'.$repository.'</a>';
 		}
 		
-		return $repository;
+		return $prefix . $repository;
 	}
-	*/
-
 	
 	/**
 	 * Callback function for 'creator' key
