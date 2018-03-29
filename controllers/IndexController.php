@@ -16,6 +16,10 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 {    
 	private $_allowedExtensions = array('pdf', 'jpg', 'jpeg', 'zip', 'rar', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'csv');
 
+    private $_solrFacets = array('publisher' => 'repository');
+
+    private $_disableLinks = array('related_descriptions');
+
     public function init()
     {
         $this->_helper->db->setDefaultModelName('AdditionalResource');
@@ -358,19 +362,44 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 
         $res = array();
         foreach ($ini as $section => $fields) {
+
             foreach ($fields as $key => $field) {
                 
-                $values = $this->view->values($item, $key);
+                if (array_key_exists($key, $this->_solrFacets) || in_array($key, $this->_disableLinks) ) {
+                    $values = $this->view->values($item, $key, true);
+                } else {
+                    $values = $this->view->values($item, $key);
+                }
 
                 $temp = $values;
                 $temp = array_shift($temp);
+
+                foreach($values as $k => $value) {
+
+                    foreach($value as $v) {
+                        if (array_key_exists($key, $this->_solrFacets)) {
+                            $facet = $this->_solrFacets[$key];
+                            $res[$section][$k][] = $this->_solrLink($v, $facet);
+                        } else {
+                            $res[$section][$k][] = $v;
+                        }
+                    }
+                }
+                /*
                 if (count($temp)) {
                     $res[$section][] = $values;
                 }
+                */
             }
              
         }
         return $res;        
+    }
+
+    private function _solrLink($value, $solrFacet)
+    {
+        $url = url('solr-search?q=&facet='.$solrFacet.'%3A'.htmlspecialchars('"', ENT_QUOTES).$value.htmlspecialchars('"', ENT_QUOTES));
+        return '<a style="color:orangered;" href="'.$url.'">'.$value.'</a><br />';
     }
 
 
