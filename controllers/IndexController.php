@@ -385,7 +385,9 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
                             $text[$k][] = $v;
                         }
                     }
-                    $res[$section][] = $text;
+                    if (count($text)) {
+                        $res[$section][] = $text;
+                    }
                 }
                 /*
                 if (count($temp)) {
