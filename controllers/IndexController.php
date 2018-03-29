@@ -376,14 +376,16 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 
                 foreach($values as $k => $value) {
 
+                    $text = array();
                     foreach($value as $v) {
                         if (array_key_exists($key, $this->_solrFacets)) {
                             $facet = $this->_solrFacets[$key];
-                            $res[$section][$k][] = $this->_solrLink($v, $facet);
+                            $text[] = $this->_solrLink($v, $facet);
                         } else {
-                            $res[$section][$k][] = $v;
+                            $text[$k][] = $v;
                         }
                     }
+                    $res[$section][] = $text;
                 }
                 /*
                 if (count($temp)) {
