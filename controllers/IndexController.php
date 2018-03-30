@@ -16,9 +16,61 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
 {    
 	private $_allowedExtensions = array('pdf', 'jpg', 'jpeg', 'zip', 'rar', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'csv');
 
-    private $_solrFacets = array('publisher' => 'repository');
+    private $_solrFacets = array('publisher' => 'repository', 'language' => 'language', 'name_access_points' => 'name', 'spatial_coverage' => 'name');
 
     private $_disableLinks = array('related_descriptions');
+
+    private $_itemFields = array('identifier', 
+                                 'alternative_identifier',
+                                 'title',
+                                 'date',
+                                 'date_start',
+                                 'date_end',
+                                 'type',
+                                 'format',
+                                 'publisher',
+                                 'creator',
+                                 'scope_and_content',
+                                 'language',
+                                 'source',
+                                 'bibliographic_citation',
+                                 'related_descriptions',
+                                 'name_access_points',
+                                 'spatial_coverage',
+                                 );    
+
+    private $_fondsFields = array('identifier', 
+                                 'alternative_identifier',
+                                 'title',
+                                 'date',
+                                 'date_start',
+                                 'date_end',
+                                 'type',
+                                 'format',
+                                 'publisher',
+                                 'creator',
+                                 'provenance',
+                                 'accrual_method',
+                                 'scope_and_content',
+                                 'accrual_policy',
+                                 'accrual_periodicity',
+                                 'arrangement',
+                                 'access_rights',
+                                 'is_referenced_by',
+                                 'relations_originals',
+                                 'relations_copies',
+                                 'bibliographic_citation',
+                                 'related_descriptions',
+                                 'conforms_to',
+                                 'status',
+                                 'date_submitted',
+                                 'source',
+                                 "archivist's_note",
+                                 'subject_access_points',
+                                 'spatial_coverage',
+                                 'name_access_points',
+                                 );        
+
 
     public function init()
     {
@@ -360,10 +412,22 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
     {
         $ini = parse_ini_file(ADDITIONAL_RESOURCES_PLUGIN_DIRECTORY.'/fields.ini', true);
 
+        $isTopLevel = OaipmhHarvesterPlugin::isTopLevelItem($item);
+
         $res = array();
         foreach ($ini as $section => $fields) {
 
             foreach ($fields as $key => $field) {
+
+                if ($isTopLevel) {
+                    if (!in_array($key, $this->_fondsFields)) {
+                        continue;
+                    }
+                } else {
+                    if (!in_array($key, $this->_itemFields)) {
+                        continue;
+                    }
+                }
                 
                 if (array_key_exists($key, $this->_solrFacets) || in_array($key, $this->_disableLinks) ) {
                     $values = $this->view->values($item, $key, true);
@@ -380,9 +444,9 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
                     foreach($value as $v) {
                         if (array_key_exists($key, $this->_solrFacets)) {
                             $facet = $this->_solrFacets[$key];
-                            $text[] = $this->_solrLink($v, $facet);
+                            $text[$k][] = $this->_solrLink($v, $facet);
                         } else {
-                            $text[$k][] = $v;
+                            $text[$k][] = nl2br($v);
                         }
                     }
                     if (count($text)) {
@@ -403,7 +467,7 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
     private function _solrLink($value, $solrFacet)
     {
         $url = url('solr-search?q=&facet='.$solrFacet.'%3A'.htmlspecialchars('"', ENT_QUOTES).$value.htmlspecialchars('"', ENT_QUOTES));
-        return '<a style="color:orangered;" href="'.$url.'">'.$value.'</a><br />';
+        return '<a style="color:orangered;" href="'.$url.'">'.$value.'</a>';
     }
 
 
