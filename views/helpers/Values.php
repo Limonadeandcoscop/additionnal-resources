@@ -368,8 +368,14 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	 */
 	private function get_creator($key)
 	{
-		$creators = metadata($this->_item, array('Dublin Core', 'Creator'));
-		$link = metadata($this->_item, array('Item Type Metadata', 'Creator Link'));
+		if (plugin_is_active('OaipmhHarvester')) {
+			$item = OaipmhHarvesterPlugin::getTopParentItem($this->_item);
+		} else {
+			$item = $this->_item;
+		}
+
+		$creators = metadata($item, array('Dublin Core', 'Creator'));
+		$link = metadata($item, array('Item Type Metadata', 'Creator Link'));
 
 		$res = array();
 
