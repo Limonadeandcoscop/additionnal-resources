@@ -111,6 +111,7 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	{
 		$types = metadata($this->_item, array('Dublin Core', 'Type'), array('all' => true));
 		$types = @preg_grep("/^(?!image.*$).*/", array_map("trim", $types));
+		$types = @preg_grep("/^(?!text.*$).*/", array_map("trim", $types));
 		$types = array_values($types);
 
 		if(@!$types[0]) return array();
