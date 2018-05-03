@@ -25,6 +25,9 @@ define('ADDITIONAL_RESOURCES_UPLOADS_URL', WEB_FILES . '/uploads');
  */
 class AdditionalResourcesPlugin extends Omeka_Plugin_AbstractPlugin
 {
+    // ID of the 'Bibliogreaphy' item type 
+    const BIBLIOGRAPHIC_ITEM = 20;
+
     /**
      * @var array Hooks for the plugin.
      */
