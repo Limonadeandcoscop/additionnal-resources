@@ -21,6 +21,11 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
 	// Disable links in results ?
 	private $_disable_links;
 
+	public function __construct() {
+
+		$this->_fields = parse_ini_file(ADDITIONAL_RESOURCES_PLUGIN_DIRECTORY.'/fields.ini');
+	}
+
 	/**
 	 * Manage values calls
 	 *
@@ -39,9 +44,6 @@ class Omeka_View_Helper_Values extends Zend_View_Helper_Abstract
     	$this->_item = $item;
 
     	$this->_disable_links = $disable_links;
-
-    	// $ini = new Zend_Config_Ini();
-    	$this->_fields = parse_ini_file(ADDITIONAL_RESOURCES_PLUGIN_DIRECTORY.'/fields.ini');
 
     	$label = $this->_getLabel($key);
 
