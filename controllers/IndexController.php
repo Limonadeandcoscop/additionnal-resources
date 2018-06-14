@@ -391,6 +391,8 @@ class AdditionalResources_IndexController extends Omeka_Controller_AbstractActio
             $values['headers']['title']         = @array_shift($this->view->values($item, 'title'));
         }
 
+        $values['item_id'] = $item->id;
+
         if ($this->getParam('debug')) {
             echo '<pre>';
             print_r($values);
